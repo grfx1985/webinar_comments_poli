@@ -11,9 +11,11 @@
 </p>
 
 <p>
-  <strong>Movie:</strong>
-  <%= @actor.movie %>
+  <strong>Film:</strong>
+  <%= @actor.film.title %>
 </p>
+
+<%= render partial: "comments/comments", locals: {commentable: @actor} %>
 
 <%= link_to 'Edit', edit_actor_path(@actor) %> |
 <%= link_to 'Back', actors_path %>
