@@ -1,4 +1,4 @@
-class CommentsControler < ApplicationController
+class CommentsController < ApplicationController
 
   def create
     @comment = @commentable.comments.new comment_params

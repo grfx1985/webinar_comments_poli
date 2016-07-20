@@ -1,4 +1,4 @@
-class Actors::CommentsControler < CommentsControler
+class Actors::CommentsController < CommentsController
   before_action :set_commentable
 
   private
