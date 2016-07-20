@@ -10,5 +10,15 @@
   <%= @film.description %>
 </p>
 
+<h3>Comments</h3>
+<% @film.comments.each do |comment| %>
+  <div>
+    <%= comment.body %>
+  </div>
+<% end %>
+<br>
+<br>
+<br>
+
 <%= link_to 'Edit', edit_film_path(@film) %> |
 <%= link_to 'Back', films_path %>
