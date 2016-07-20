@@ -1,6 +1,12 @@
 Rails.application.routes.draw do
-  resources :films
-  resources :actors
+  resources :films do
+    resources :comments, module: :films
+  end
+  resources :actors do
+    resources :comments, module: :actors
+  end
+
+  root to: "films#index"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

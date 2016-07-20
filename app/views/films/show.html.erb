@@ -9,6 +9,7 @@
   <strong>Description:</strong>
   <%= @film.description %>
 </p>
+<%= render partial: "comments/form", locals: {commentable: @film} %>
 
 <%= render partial: "comments/comments", locals: {commentable: @film} %>
 
