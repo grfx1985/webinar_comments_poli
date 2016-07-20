@@ -1,0 +1,136 @@
+step 1
+rails g model Comment commentable_type:string commentable_id:integer body:text
+
+rake db:migrate
+
+step 2 
+
+class Comment < ActiveRecord::Base
+  belongs_to :commentable, polimorphic: true
+end
+class Actor < ActiveRecord::Base
+  belongs_to :film
+  has_many :comments, as: :commentable
+end
+class Film < ActiveRecord::Base
+  has_many :actors, dependent: :destroy
+  has_many :comments, as: :commentable
+end
+ step3 
+
+irb(main):001:0> Film.first.comments
+  Film Load (0.1ms)  SELECT  "films".* FROM "films"  ORDER BY "films"."id" ASC LIMIT 1
+  Comment Load (0.2ms)  SELECT "comments".* FROM "comments" WHERE "comments"."commentable_id" = ? AND "comments"."commentable_type" = ?  [["commentable_id", 1], ["commentable_type", "Film"]]
+=> #<ActiveRecord::Associations::CollectionProxy []>
+
+irb(main):002:0> Comment.create(commentable: Film.first, body:"commen from console")
+  Film Load (0.3ms)  SELECT  "films".* FROM "films"  ORDER BY "films"."id" ASC LIMIT 1
+   (0.1ms)  begin transaction
+  SQL (0.4ms)  INSERT INTO "comments" ("commentable_id", "commentable_type", "body", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["commentable_id", 1], ["commentable_type", "Film"], ["body", "commen from console"], ["created_at", "2016-07-20 13:55:04.626697"], ["updated_at", "2016-07-20 13:55:04.626697"]]
+   (13.5ms)  commit transaction
+=> #<Comment id: 1, commentable_type: "Film", commentable_id: 1, body: "commen from console", created_at: "2016-07-20 13:55:04", updated_at: "2016-07-20 13:55:04">
+
+irb(main):003:0> Film.first.comments
+  Film Load (0.3ms)  SELECT  "films".* FROM "films"  ORDER BY "films"."id" ASC LIMIT 1
+  Comment Load (0.2ms)  SELECT "comments".* FROM "comments" WHERE "comments"."commentable_id" = ? AND "comments"."commentable_type" = ?  [["commentable_id", 1], ["commentable_type", "Film"]]
+=> #<ActiveRecord::Associations::CollectionProxy [#<Comment id: 1, commentable_type: "Film", commentable_id: 1, body: "commen from console", created_at: "2016-07-20 13:55:04", updated_at: "2016-07-20 13:55:04">]>
+
+step 4
+
+film#show 
+
+
+<h3>Comments</h3>
+<% @film.comments.each do |comment| %>
+  <div>
+    <%= comment.body %>
+  </div>
+<% end %>
+<br>
+<br>
+<br>
+
+step 5
+
+'irb(main):002:0> Actor.first.comments.create(body: "comment from console other way")
+  Actor Load (0.1ms)  SELECT  "actors".* FROM "actors"  ORDER BY "actors"."id" ASC LIMIT 1
+   (0.1ms)  begin transaction
+  SQL (0.3ms)  INSERT INTO "comments" ("body", "commentable_id", "commentable_type", "created_at", "updated_at") VALUES (?, ?, ?, ?, ?)  [["body", "comment from console other way"], ["commentable_id", 1], ["commentable_type", "Actor"], ["created_at", "2016-07-20 14:01:09.773616"], ["updated_at", "2016-07-20 14:01:09.773616"]]
+   (9.9ms)  commit transaction
+=> #<Comment id: 2, commentable_type: "Actor", commentable_id: 1, body: "comment from console other way", created_at: "2016-07-20 14:01:09", updated_at: "2016-07-20 14:01:09">
+
+step 6 
+do widokow show 
+<%= render partial: "comments/comments", locals: {commentable: @film/@actor} %>
+
+
+step 7
+
+shows => partial do dodawania
+<%= render partial: "comments/form", locals: {commentable: @actor/@film} %>
+#####
+<% form_for [commentable, Comment.new ] do |f| %>
+<div>
+<%= f.text_area :body, placholder: "Add a comment" %>
+</div>
+<%= f.submit %>
+<% end %>
+
+
+
+  resources :films do
+    resources :comments, module: :films
+  end
+  resources :actors do
+    resources :comments, module: :actors
+  end
+
+  root to: "films#index"
+
+
+
+class CommentsController < ApplicationController
+
+  def create
+    @comment = @commentable.comments.new comment_params
+    @comment.save
+    redirect_to @commentable, notice: "Your comment was added"
+  end
+
+  private
+
+  def comment_params
+  end
+
+end
+
+class Films/Actors::CommentsController < CommentsController
+  before_action :set_commentable
+
+  private
+    def set_commentable
+      @commentable = Film.find(params[:film_id/:actor_id])
+    end
+end
+
+
+
+ step 8 
+
+<h3>Comments</h3>
+<% commentable.comments.each_with_index do |comment, i| %>
+  <div><strong><%= "##{i+1}" %></strong></div>
+  <div>
+    <%= comment.body %>
+  </div>
+
+<% end %>
+<br>
+<br>
+<br>
+
+
+
+
+
+
