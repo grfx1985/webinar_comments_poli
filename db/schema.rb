@@ -16,12 +16,12 @@ ActiveRecord::Schema.define(version: 20160720131255) do
   create_table "actors", force: :cascade do |t|
     t.string   "name"
     t.string   "description"
-    t.integer  "movie_id"
+    t.integer  "film_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end
 
-  add_index "actors", ["movie_id"], name: "index_actors_on_movie_id"
+  add_index "actors", ["film_id"], name: "index_actors_on_film_id"
 
   create_table "films", force: :cascade do |t|
     t.string   "title"

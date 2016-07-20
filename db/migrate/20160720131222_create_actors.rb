@@ -3,7 +3,7 @@ class CreateActors < ActiveRecord::Migration
     create_table :actors do |t|
       t.string :name
       t.string :description
-      t.references :movie, index: true, foreign_key: true
+      t.references :film, index: true, foreign_key: true
 
       t.timestamps null: false
     end

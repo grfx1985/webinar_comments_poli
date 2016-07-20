@@ -1,3 +1,3 @@
 class Actor < ActiveRecord::Base
-  belongs_to :movie
+  belongs_to :film
 end

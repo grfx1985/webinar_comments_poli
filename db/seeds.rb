@@ -5,11 +5,11 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
-Actors.destroy_all
+Actor.destroy_all
 Film.destroy_all
 
 50.times do
- f = Film.create(title: Faker::Book.title)
+ f = Film.create(title: Faker::Book.title, description: Faker::Hipster.paragraph(2))
   5.times do
     Actor.create(name: Faker::Name.name, description: Faker::Hipster.paragraph(5), film: f)
   end
